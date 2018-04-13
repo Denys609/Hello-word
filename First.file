@@ -1,0 +1,154 @@
+#include "vector_int.h"
+#include<string>
+using namespace std;
+
+template<typename T>
+template<typename It> Vector<T>::Vector(It* b, It* e): size(e-b) {
+	data = new T[size];
+	for (size_t i = 0; i < size; i++) {
+		data[i] = *b;
+		++b;
+	}
+}
+template<typename T>
+Vector<T>::Vector(size_t s, T v)
+try : size(s) {
+	if (size > maxSize) throw Size(size);
+	data=new T[size];
+	for(size_t i=0; i<size; i++) data[i]=v;
+}
+catch (const Size &) { throw; }
+
+template<typename T>
+Vector<T>::Vector(const Vector& a)
+	:size(a.size){ cout<<"Vector c";
+	data=new T[size];
+	for(size_t i=0; i<size; i++) data[i]=a[i];
+}
+
+template<typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& a){
+	if(&a==this) return *this;
+	size=a.size;
+	delete[] data;	
+	data= new T[size];
+	for(size_t i=0; i<size; i++) data[i]=a[i];
+	return *this;
+}
+
+template<typename T>
+istream & operator>>(istream& in, Vector<T>& a){
+	for(size_t i=0; i<a.size; i++) in>>a[i];
+	return in;
+}
+
+template<typename T>
+ostream & operator<<(ostream& out, const Vector<T>& a){
+	out<<endl << " Vector(" <<a.size<<") : "<<std::endl;
+	for(size_t i=0; i<a.size; i++) out<<a[i]<<"   ";
+	return out;
+}
+
+template<typename T>
+bool Vector<T>::operator==(const Vector<T>& a)const {
+		if (size!=a.size)return false;
+		
+		for(size_t i=0; i<size; ++i)
+			if(data[i]!=a[i])return false;
+		return true;
+	}
+template<typename T>
+Vector<T>& Vector<T>::operator+=(const Vector<T>& a){
+	if (size!=a.size){
+		cout<<"Vector+= : failure! Press any key"; 
+			int pk; cin >>pk; exit(1);
+	}
+	if(&a==this) {		
+		return *this;
+	}
+		
+	for(size_t i=0; i<size; i++) data[i]+=a[i];
+
+	return *this;
+}
+template<typename T>
+Vector<T>& operator*=(Vector<T>& v, int k){
+	for(size_t i=0; i<v.get_size(); i++) v[i]*=k;
+	return v;
+}
+
+template<typename T>
+Vector<T>& operator++(Vector<T>& v){
+	for(size_t i=0; i<v.get_size(); i++) ++v[i];
+	return v;
+}
+template<typename T>
+Vector<T>& operator--(Vector<T>& v){
+	for(size_t i=0; i<v.get_size(); i++) --v[i];
+	return v;
+}
+template<typename T>
+Vector<T> operator++(Vector<T>& v, int){
+	Vector old(v);
+	++v;
+	return old;
+}
+template<typename T>
+Vector<T> operator--(Vector<T>& v,int){
+	Vector old(v);
+	--v;
+	return old;
+}
+template<typename T>
+void print(ostream& os, T* first, T* last){
+	unsigned k=0;
+	for(const  T* i=first; i<last;++i){
+		os<<*i<<' '; ++k; 
+		if(k==10){k=0; os<<endl;} 
+	}
+}
+template<typename T>
+T* min_el_ptr(
+	T* first, T* last){
+	
+	T* min_el_p=first;
+	T min_el=*first;
+	
+	for(T* i=first+1 ; i<last; ++i){
+		if( *i < min_el) {min_el=*i; min_el_p=i;}
+	}
+	return min_el_p;
+}
+
+template<typename T>
+void sort(T * first,	T * last){
+	T* tp;
+	T tv;
+
+	for(T* i=first; i<last-1; ++i){
+
+		tp= min_el_ptr(i,last);
+
+		if (i<tp){
+			tv=*tp;
+			*tp=*i;
+			*i=tv;
+		}
+	}
+}
+
+template< typename T, template<typename > class Seq >
+void printSeq(Seq<T>& seq)
+{
+	for ( T*  b= seq.begin(); b != seq.end(); ++b)
+		cout << *b << endl;
+}
+
+
+
+	
+
+
+
+
+
